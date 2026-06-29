@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Profile Input</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Creator Profile Input</h1>
+      <p>Fill the form below to save data</p>
+    </div>
+
+    <form action="/" method="POST" class="profile-form">
+      <div class="grid">
+        <div class="field">
+          <label for="user_name">Name *</label>
+          <input type="text" id="user_name" name="user_name" required>
+        </div>
+
+        <div class="field">
+          <label for="user_age">Age</label>
+          <input type="number" id="user_age" name="user_age">
+        </div>
+
+        <div class="field">
+          <label for="user_channel_name">Channel Name *</label>
+          <input type="text" id="user_channel_name" name="user_channel_name" required>
+        </div>
+
+        <div class="field">
+          <label for="user_subscribers">Subscribers</label>
+          <input type="text" id="user_subscribers" name="user_subscribers">
+        </div>
+
+        <div class="field">
+          <label for="user_date">Channel Creation Date</label>
+          <input type="text" id="user_date" name="user_date" placeholder="MM/DD/YYYY">
+        </div>
+
+        <div class="field">
+          <label for="user_country">Country</label>
+          <input type="text" id="user_country" name="user_country">
+        </div>
+
+        <div class="field">
+          <label for="userhighestview">Highest View Count</label>
+          <input type="text" id="userhighestview" name="userhighestview">
+        </div>
+
+        <div class="field full">
+          <label for="user_service_looking_for">Service Looking For</label>
+          <input type="text" id="user_service_looking_for" name="user_service_looking_for">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
