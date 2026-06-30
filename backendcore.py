@@ -1,6 +1,32 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
+import sqlite3
 
 app = Flask(__name__)
+DATABASE = "responses.db"
+
+
+def init_db():
+    conn = sqlite3.connect(DATABASE)
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS responses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_name TEXT,
+            user_age TEXT,
+            user_channel_name TEXT,
+            user_subscribers TEXT,
+            user_date TEXT,
+            user_country TEXT,
+            userhighestview TEXT,
+            user_service_looking_for TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+init_db()
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -14,19 +40,34 @@ def home():
         userhighestview = request.form.get("userhighestview")
         user_service_looking_for = request.form.get("user_service_looking_for")
 
-        return f"""
-        PRINTING USER DATA<br><br>
-        USER NAME --> {user_name}<br><br>
-        USER AGE --> {user_age}<br><br>
-        USER CHANNEL NAME --> {user_channel_name}<br><br>
-        USER SUBSCRIBERS --> {user_subscribers}<br><br>
-        USER CHANNEL CREATION DATE --> {user_date}<br><br>
-        USER COUNTRY --> {user_country}<br><br>
-        USER HIGHEST VIEW COUNT --> {userhighestview}<br><br>
-        USER SERVICE LOOKING FOR --> {user_service_looking_for}<br><br>
-        """
+        conn = sqlite3.connect(DATABASE)
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO responses (
+                user_name, user_age, user_channel_name, user_subscribers,
+                user_date, user_country, userhighestview, user_service_looking_for
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            user_name, user_age, user_channel_name, user_subscribers,
+            user_date, user_country, userhighestview, user_service_looking_for
+        ))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for("home"))
 
     return render_template("index.html")
+
+
+@app.route("/admin")
+def admin():
+    conn = sqlite3.connect(DATABASE)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM responses ORDER BY id DESC")
+    rows = cur.fetchall()
+    conn.close()
+    return render_template("admin.html", rows=rows)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
